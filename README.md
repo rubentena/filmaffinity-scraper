@@ -37,8 +37,8 @@ El script utiliza un **método híbrido** para superar las protecciones anti-bot
 
 1.  **Encuentra tu ID de Usuario de FilmAffinity.**
     -   Ve a tu perfil de FilmAffinity y haz clic en "Mis votaciones".
-    -   La URL será algo como: `https://www.filmaffinity.com/es/userratings.php?user_id=860588`
-    -   Tu ID de usuario es el número que aparece al final (en este caso, `860588`).
+    -   La URL será algo como: `https://www.filmaffinity.com/es/userratings.php?user_id=123456`
+    -   Tu ID de usuario es el número que aparece al final (en este caso, `12345`).
 
 2.  **Ejecuta el script desde tu terminal.**
     -   Pasa tu ID de usuario como argumento después del nombre del script.
@@ -47,7 +47,7 @@ El script utiliza un **método híbrido** para superar las protecciones anti-bot
     ```
     -   *Ejemplo:*
     ```bash
-    python scraper.py 860588
+    python scraper.py 12345
     ```
 
 3.  **Sigue las instrucciones en la terminal.**
