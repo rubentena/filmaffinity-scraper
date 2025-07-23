@@ -67,6 +67,11 @@ El script creará un archivo llamado **`votaciones_TU_USER_ID.csv`** en la misma
 La efectividad de este script depende de la estructura del código HTML de FilmAffinity. Si la web cambia en el futuro, es posible que el script necesite ajustes en sus selectores. *Versión funcional a julio de 2025.*
 
 ---
+## Autor
+
+* **Rubén Tena Martínez** - [LinkedIn](https://www.linkedin.com/in/rubén-t-17b238a2)
+
+---
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT.
