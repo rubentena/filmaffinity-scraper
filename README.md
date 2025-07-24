@@ -23,7 +23,7 @@ El script utiliza un **método híbrido** para superar las protecciones anti-bot
 
 1.  **Clona o descarga este repositorio.**
     ```bash
-    git clone [https://github.com/rubentena/filmaffinity-scraper.git](https://github.com/rubentena/filmaffinity-scraper.git)
+    git clone https://github.com/rubentena/filmaffinity-scraper.git
     cd TU_REPOSITORIO
     ```
 
