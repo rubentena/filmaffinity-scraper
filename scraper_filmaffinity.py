@@ -1,6 +1,8 @@
 # scraper.py
 
 import csv
+import re
+import subprocess
 import time
 import argparse
 from bs4 import BeautifulSoup
@@ -8,6 +10,27 @@ import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+RUTAS_NAVEGADOR = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium-browser",
+]
+
+def detectar_navegador():
+    for ruta in RUTAS_NAVEGADOR:
+        try:
+            resultado = subprocess.run(
+                [ruta, "--version"], capture_output=True, text=True, timeout=5
+            )
+            match = re.search(r"(\d+)\.\d+\.\d+", resultado.stdout)
+            if match:
+                return ruta, int(match.group(1))
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            continue
+    return None, None
 
 def descargar_votaciones_filmaffinity(user_id):
     """
@@ -20,11 +43,18 @@ def descargar_votaciones_filmaffinity(user_id):
     3. Una vez el usuario confirma, el script reanuda la extracción de forma
        totalmente automática, navegando por todas las páginas de votaciones.
     """
-    print("Configurando el navegador...")
+    print("Detectando navegador...")
+    nav_path, nav_version = detectar_navegador()
+    if not nav_path:
+        print("ERROR: No se encontró Google Chrome, Brave ni Chromium instalado.")
+        return
+
+    print(f"Usando: {nav_path} (versión {nav_version})")
     options = uc.ChromeOptions()
     options.add_argument("--log-level=3")
+    options.binary_location = nav_path
     # El navegador debe ser visible para la intervención manual del usuario.
-    driver = uc.Chrome(options=options, use_subprocess=True)
+    driver = uc.Chrome(options=options, use_subprocess=True, browser_executable_path=nav_path, version_main=nav_version)
     driver.maximize_window()
     
     print("Navegador configurado.")
@@ -37,14 +67,17 @@ def descargar_votaciones_filmaffinity(user_id):
         driver.get(url_lista)
 
         # --- PAUSA PARA ACCIÓN MANUAL DEL USUARIO ---
+        espera = 60
         print("\n" + "="*70)
         print(">>> ACCIÓN REQUERIDA <<<")
-        print("1. Revisa la ventana de Chrome que se ha abierto.")
+        print("1. Revisa la ventana de Brave que se ha abierto.")
         print("2. Si ves un banner de cookies o un CAPTCHA, resuélvelo manualmente.")
-        print("3. Espera hasta que veas tu lista de películas cargada en la página.")
-        print("4. Una vez la lista sea visible, vuelve a esta terminal y pulsa Enter.")
+        print("3. El script continuará automáticamente en cuanto aceptes las cookies.")
         print("="*70)
-        input("Pulsa Enter para que el script comience a descargar los datos...")
+        for i in range(espera, 0, -1):
+            print(f"  Continuando en {i} segundos... (acepta las cookies en el navegador)", end="\r")
+            time.sleep(1)
+        print("\nReanudando automatización...")
         
         print("\nReanudando automatización... ¡Comienza la extracción!")
 
